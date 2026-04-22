@@ -1,0 +1,48 @@
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+  
+  --color-arch-bg: #050505;
+  --color-arch-text: #ffffff;
+  --color-arch-muted: #737373;
+  --color-arch-border: #262626;
+  --color-arch-accent: #16a34a; /* A sharp, professional green */
+  --color-arch-surface: #0a0a0a;
+}
+
+@layer base {
+  body {
+    @apply bg-arch-bg text-arch-text font-mono selection:bg-arch-accent selection:text-black;
+  }
+}
+
+.arch-card {
+  @apply border border-arch-border bg-arch-surface p-6 transition-all duration-300 hover:border-arch-muted;
+}
+
+.arch-header {
+  @apply border-b border-arch-border py-12 mb-12;
+}
+
+.arch-grid {
+  @apply grid grid-cols-1 md:grid-cols-12 gap-0 border-l border-t border-arch-border;
+}
+
+.arch-grid-item {
+  @apply md:col-span-4 border-r border-b border-arch-border p-8;
+}
+
+.arch-grid-item-wide {
+  @apply md:col-span-8 border-r border-b border-arch-border p-8;
+}
+
+.arch-grid-item-full {
+  @apply md:col-span-12 border-r border-b border-arch-border p-8;
+}
+
+.glow-subtle {
+  box-shadow: 0 0 20px rgba(22, 163, 74, 0.05);
+}

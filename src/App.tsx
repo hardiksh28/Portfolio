@@ -21,6 +21,7 @@ import {
   Briefcase
 } from "lucide-react";
 import { useState, useEffect, type FormEvent } from "react";
+import posthog from "posthog-js";
 
 const RESUME_DATA = {
   name: "Hardik Sharma",
@@ -100,6 +101,10 @@ const ContactForm = () => {
 
       const data = await response.json();
       if (data.success) {
+        posthog.capture('contact_form_submitted', {
+          subject: formData.subject,
+          email: formData.email
+        });
         setStatus("success");
         setResponseMsg(data.message);
         setFormData({ name: "", email: "", subject: "", message: "" });
@@ -407,13 +412,34 @@ export default function App() {
                   <a href={`mailto:${RESUME_DATA.email}`} className="hover:text-arch-accent transition-colors border-b border-transparent hover:border-arch-accent">{RESUME_DATA.email}</a>
                   <span className="text-arch-muted">{RESUME_DATA.mobile}</span>
                   <div className="flex gap-4 mt-4">
-                    <a href={RESUME_DATA.linkedin} target="_blank" rel="noreferrer" className="p-2 border border-arch-border hover:bg-arch-accent hover:text-black transition-all rounded" aria-label="LinkedIn">
+                    <a 
+                      href={RESUME_DATA.linkedin} 
+                      target="_blank" 
+                      rel="noreferrer" 
+                      className="p-2 border border-arch-border hover:bg-arch-accent hover:text-black transition-all rounded" 
+                      aria-label="LinkedIn"
+                      onClick={() => posthog.capture('social_link_clicked', { platform: 'linkedin' })}
+                    >
                       <Linkedin size={18} />
                     </a>
-                    <a href={RESUME_DATA.github} target="_blank" rel="noreferrer" className="p-2 border border-arch-border hover:bg-arch-accent hover:text-black transition-all rounded" aria-label="GitHub">
+                    <a 
+                      href={RESUME_DATA.github} 
+                      target="_blank" 
+                      rel="noreferrer" 
+                      className="p-2 border border-arch-border hover:bg-arch-accent hover:text-black transition-all rounded" 
+                      aria-label="GitHub"
+                      onClick={() => posthog.capture('social_link_clicked', { platform: 'github' })}
+                    >
                       <Github size={18} />
                     </a>
-                    <a href={RESUME_DATA.twitter} target="_blank" rel="noreferrer" className="p-2 border border-arch-border hover:bg-arch-accent hover:text-black transition-all rounded" aria-label="Twitter/X">
+                    <a 
+                      href={RESUME_DATA.twitter} 
+                      target="_blank" 
+                      rel="noreferrer" 
+                      className="p-2 border border-arch-border hover:bg-arch-accent hover:text-black transition-all rounded" 
+                      aria-label="Twitter/X"
+                      onClick={() => posthog.capture('social_link_clicked', { platform: 'twitter' })}
+                    >
                       <Twitter size={18} />
                     </a>
                   </div>
@@ -465,7 +491,13 @@ export default function App() {
                         <code className="text-xs text-arch-accent tracking-tighter">{project.tech}</code>
                       </div>
                       {project.url ? (
-                        <a href={project.url} target="_blank" rel="noreferrer" className="p-2 border border-arch-border group-hover:border-arch-accent group-hover:text-arch-accent transition-colors">
+                        <a 
+                          href={project.url} 
+                          target="_blank" 
+                          rel="noreferrer" 
+                          className="p-2 border border-arch-border group-hover:border-arch-accent group-hover:text-arch-accent transition-colors"
+                          onClick={() => posthog.capture('project_viewed', { project: project.title })}
+                        >
                           <ExternalLink size={20} />
                         </a>
                       ) : (

@@ -1,3 +1,4 @@
+import "dotenv/config";
 import express from "express";
 import { createServer as createViteServer } from "vite";
 import path from "path";
@@ -11,7 +12,11 @@ const __dirname = path.dirname(__filename);
 let resendClient: Resend | null = null;
 const getResend = () => {
   const key = process.env.RESEND_API_KEY;
-  if (!key || key.startsWith("re_...")) return null;
+  console.log("Checking Resend API Key:", key ? "Key present" : "Missing");
+  if (!key || key === "re_...") {
+    console.log("Resend API Key is placeholder or missing. Using fallback mode (logs only).");
+    return null;
+  }
   if (!resendClient) resendClient = new Resend(key);
   return resendClient;
 };
@@ -24,6 +29,14 @@ async function startServer() {
 
   // API Route for Contact Form
   app.post("/api/contact", async (req, res) => {
+    console.log("Incoming request to /api/contact");
+    console.log("Request body:", req.body);
+    
+    if (!req.body || Object.keys(req.body).length === 0) {
+      console.error("Empty request body received");
+      return res.status(400).json({ success: false, message: "Empty request body" });
+    }
+
     const { name, email, subject, message } = req.body;
     const resend = getResend();
 

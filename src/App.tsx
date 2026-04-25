@@ -99,6 +99,12 @@ const ContactForm = () => {
         body: JSON.stringify(formData),
       });
 
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error("Server responded with error:", errorText);
+        throw new Error(`Server error: ${response.status}`);
+      }
+
       const data = await response.json();
       if (data.success) {
         posthog.capture('contact_form_submitted', {
@@ -109,11 +115,12 @@ const ContactForm = () => {
         setResponseMsg(data.message);
         setFormData({ name: "", email: "", subject: "", message: "" });
       } else {
-        throw new Error("Submission failed");
+        throw new Error(data.message || "Submission failed");
       }
     } catch (err) {
+      console.error("Form submission error:", err);
       setStatus("error");
-      setResponseMsg("System error: Unable to dispatch inquiry. Please try again.");
+      setResponseMsg(err instanceof Error ? `System error: ${err.message}` : "System error: Unable to dispatch inquiry. Please try again.");
     }
   };
 

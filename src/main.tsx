@@ -1,6 +1,7 @@
 import {StrictMode} from 'react';
 import {createRoot} from 'react-dom/client';
 import App from './App.tsx';
+import 'lenis/dist/lenis.css';
 import './index.css';
 import { PostHogProvider } from './providers/PostHogProvider.tsx';
 import { Analytics } from '@vercel/analytics/react';
